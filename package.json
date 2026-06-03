@@ -1,0 +1,25 @@
+{
+  "name": "kahoot-clone",
+  "version": "1.0.0",
+  "description": "Aplicación tipo Kahoot en tiempo real - React + Node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev-backend": "cd backend && nodemon server.js",
+    "dev-frontend": "cd frontend && npm run dev",
+    "build": "cd frontend && npm install && npm run build"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "exceljs": "^4.4.0",
+    "express": "^4.19.2",
+    "mssql": "^11.0.1",
+    "socket.io": "^4.7.5",
+    "uuid": "^10.0.0"
+  }
+}

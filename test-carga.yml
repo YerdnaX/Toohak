@@ -1,0 +1,16 @@
+config:
+  target: "https://tiusr15pl.cuc-carrera-ti.ac.cr"
+  phases:
+    - duration: 20
+      arrivalRate: 10
+      maxVusers: 100
+
+scenarios:
+  - engine: socketio
+    flow:
+      - emit:
+          channel: "join-session"
+          data:
+            codigo: "745640"
+            nombre: "Jugador{{ $randomNumber(1, 9999) }}"
+      - think: 50

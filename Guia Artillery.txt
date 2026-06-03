@@ -1,0 +1,82 @@
+Paso 1 — Instalar Artillery
+Abra una terminal (PowerShell o CMD) y ejecute:
+
+
+npm install -g artillery
+npm install -g @artillery/engine-socketio
+Verifique que instaló bien:
+
+
+artillery version
+Paso 2 — Preparar una sesión real en Plesk
+Artillery necesita un código de sesión válido para unir jugadores. Haga esto antes de correr el test:
+
+Abra https://tiusr15pl.cuc-carrera-ti.ac.cr
+Entre como Administrador (Admin / 123456)
+Seleccione un Kahoot y presione Iniciar sesión
+Anote el código de 6 dígitos que aparece en pantalla (ej: 847291)
+Deje esa pantalla abierta — la sesión debe estar activa
+Paso 3 — Crear el archivo de prueba
+Cree un archivo llamado test-carga.yml en el escritorio (o donde prefiera) con este contenido. Reemplace 847291 con su código real:
+
+
+config:
+  target: "https://tiusr15pl.cuc-carrera-ti.ac.cr"
+  phases:
+    - duration: 20
+      arrivalRate: 3
+      maxVusers: 50
+  engines:
+    socketio: {}
+
+scenarios:
+  - engine: socketio
+    flow:
+      - emit:
+          channel: "join-session"
+          data:
+            codigo: "847291"
+            nombre: "Jugador{{ $randomNumber(1, 9999) }}"
+      - think: 15
+Lo que hace este test: conecta 3 jugadores nuevos por segundo durante 20 segundos, hasta llegar a 50 simultáneos. Cada jugador espera 15 segundos conectado antes de desconectarse.
+
+Paso 4 — Correr el test
+En la terminal, navegue donde guardó el archivo y ejecute:
+
+
+artillery run test-carga.yml
+Paso 5 — Leer los resultados
+Artillery imprime algo así al terminar:
+
+
+Summary report @ 14:32:05
+  Scenarios launched:  50
+  Scenarios completed: 48        ← jugadores que se conectaron OK
+  Requests completed:  48
+  Mean response/sec:   2.8
+  Response time (msec):
+    min: 45
+    max: 890
+    median: 120                  ← tiempo normal de conexión
+    p95: 450                     ← el 95% se conectó en menos de esto
+    p99: 880
+  Errors: 2                      ← conexiones que fallaron
+Cómo interpretar:
+
+Qué ver	Qué significa
+Scenarios completed ≈ launched	Servidor aguantó bien
+median < 300ms	Tiempo de respuesta aceptable
+p95 < 1000ms	Nada preocupante
+Errors > 5% del total	Hay problemas de capacidad
+Paso 6 — Subir la carga gradualmente
+Si el primer test pasó bien, pruebe con más usuarios cambiando estas líneas:
+
+
+  phases:
+    - duration: 30
+      arrivalRate: 5
+      maxVusers: 100    # ← suba esto: 100, 150, 200...
+El número donde empiecen a aparecer errores o p95 supere 2000ms es su límite real.
+
+Mientras corre el test — monitor en Plesk
+Tenga abierto el panel Plesk → Node.js y observe si el proceso se reinicia. También abra https://tiusr15pl.cuc-carrera-ti.ac.cr/health en el navegador — si tarda en responder, el servidor está bajo carga real.
