@@ -70,7 +70,15 @@ if (NODE_ENV === 'production') {
     console.error('Rutas revisadas:', staticCandidates.join(' | '));
   } else {
     console.log('Frontend estatico servido desde:', frontendBuild);
-    app.use(express.static(frontendBuild));
+    // Los assets (JS/CSS) tienen hash en el nombre → se pueden cachear indefinidamente.
+    // index.html nunca se cachea para que el browser siempre cargue la versión nueva.
+    app.use(express.static(frontendBuild, {
+      setHeaders(res, filePath) {
+        if (filePath.endsWith('index.html')) {
+          res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        }
+      }
+    }));
   }
 
   // React Router (BrowserRouter): cualquier ruta desconocida devuelve index.html.

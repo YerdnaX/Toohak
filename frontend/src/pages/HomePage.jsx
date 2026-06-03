@@ -8,7 +8,7 @@ function HomePage() {
       <div className="home-card">
         <div className="home-logo">
           <img src="/images/logo1.png" alt="Logo" className="home-logo-img" />
-          <p className="home-subtitulo">Juego de preguntas en tiempo real</p>
+          <p className="home-subtitulo">Esto no es una copia de Kahoot O.O</p>
         </div>
 
         <div className="home-botones">
@@ -24,7 +24,7 @@ function HomePage() {
             className="btn btn-guest"
             onClick={() => navigate('/unirse')}
           >
-            <span className="btn-icon">🎯</span>
+            <span className="btn-icon">🐸</span>
             Entrar como Invitado
           </button>
         </div>

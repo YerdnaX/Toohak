@@ -214,7 +214,7 @@ function GameAdminPage() {
           <div className="sala-codigo-grande">
             <p>Comparte este código con los participantes:</p>
             <div className="codigo-grande">{codigoSesion}</div>
-            <p className="sala-url">Los invitados van a: <strong>/unirse</strong></p>
+            <p className="sala-url">Los invitados estan: <strong>Uniendose a esta web que no es copia de Kahoot O.O</strong></p>
           </div>
 
           {/* Lista de participantes que se van uniendo */}
